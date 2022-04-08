@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Signup{% endblock %}
+
+{% block customcss %}
+<style>
+
+</style>
+{% endblock customcss %}
+
+{% block body %}
+<main>
+    <div class="container">
+        <form method="post" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+            <h3 class="font-weight-normal mt-5">Signup Form</h3>
+            <hr class="mb-5">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    {% if message.tags %}
+                        {% if message.tags == "success" %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                        {% if message.tags == "error" %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                        {% if message.tags == "info" %}
+                            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="row mb-3">
+                <div class="col-md-6 form-group">
+                    <label for="usertype">User type</label>
+                    <select class="form-select" name="usertype" id="usertype" aria-label="Select user type" required>
+                        {% if usertype == "patient" %}
+                            <option value="doctor">Doctor</option>
+                            <option selected value="patient">Patient</option>
+                        {% else %}
+                            <option selected value="doctor">Doctor</option>
+                            <option value="patient">Patient</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="profile-picture">Select profile picture</label>
+                    {% if profile_picture %}
+                    <input type="file" class="form-control" accept="image/*" name="profile-picture"
+                        id="profile-picture" value="{{ profile_picture }}">
+                    {% else %}
+                    <input type="file" class="form-control" accept="image/*" name="profile-picture"
+                        id="profile-picture">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6 form-group">
+                    <label for="firstname">Firstname</label>
+                    {% if firstname %}
+                        <input type="text" class="form-control" name="firstname" id="firstname" value="{{ firstname }}" required>
+                    {% else %}
+                        <input type="text" class="form-control" name="firstname" id="firstname" required>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="lastname">Lastname</label>
+                    {% if lastname %}
+                        <input type="text" class="form-control" name="lastname" id="lastname" value="{{ lastname }}" required>
+                    {% else %}
+                        <input type="text" class="form-control" name="lastname" id="lastname" required>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6 form-group">
+                    <label for="address">Address</label>
+                    {% if addrs %}
+                        <textarea name="address" id="address" cols="30" rows="3" class="form-control" required>{{ addrs }}</textarea>
+                    {% else %}
+                        <textarea name="address" id="address" cols="30" rows="3" class="form-control" required></textarea>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="city">City</label>
+                    {% if city %}
+                        <input type="text" class="form-control" name="city" id="city" value="{{ city }}" required>
+                    {% else %}
+                        <input type="text" class="form-control" name="city" id="city" required>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6 form-group">
+                    <label for="state">State</label>
+                    {% if state %}
+                        <input type="text" class="form-control" name="state" id="state" value="{{ state }}" required>
+                    {% else %}
+                        <input type="text" class="form-control" name="state" id="state" required>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="pincode">Pin code</label>
+                    {% if pin %}
+                        <input type="number" class="form-control" name="pincode" id="pincode" maxlength="6" value="{{ pin }}" required>
+                    {% else %}
+                        <input type="number" class="form-control" name="pincode" id="pincode" maxlength="6" required>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6 form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" name="username" id="username" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="email">Email</label>
+                    {% if email %}
+                        <input type="email" class="form-control" name="email" id="email" value="{{ email }}" required>
+                    {% else %}
+                        <input type="email" class="form-control" name="email" id="email" required>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6 form-group">
+                    <label for="pass1">New password</label>
+                    {% if pass1 %}
+                        <input type="password" class="form-control" name="pass1" id="pass1" value="{{ pass1 }}" required>
+                    {% else %}
+                        <input type="password" class="form-control" name="pass1" id="pass1" required>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="pass2">Confirm password</label>
+                    {% if pass1 %}
+                        <input type="password" class="form-control" name="pass2" id="pass2" value="{{ pass2 }}" required>
+                    {% else %}
+                        <input type="password" class="form-control" name="pass2" id="pass2" required>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="d-grid col-md-6">
+                    <button type="submit" class="btn btn-purple">Submit</button>
+                </div>
+                <div class="d-grid col-md-6">
+                    <a href="/login" class="btn btn-purple">Login instead <i class="fas fa-sign-in-alt"></i></a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</main>
+{% endblock body %}
+
+{% block customjs %}
+{% endblock customjs %}

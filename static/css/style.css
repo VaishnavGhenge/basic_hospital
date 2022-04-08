@@ -1,0 +1,70 @@
+.jumbotron {
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    background-color: #e9ecef;
+    border-radius: 0.3rem;
+}
+
+.group {
+    margin-bottom: 20px;
+}
+
+.btn {
+    border-radius: 0px;
+}
+
+.btn-purple {
+    color: white;
+    background-color: #6666ff;
+    border-color: #6666ff;
+}
+
+.btn-purple:focus {
+    box-shadow: none;
+    color: white;
+}
+
+.btn-purple:hover {
+    box-shadow: none;
+    color: white;
+    background-color: #0000e6;
+    border-color: #0000e6;
+}
+
+.form-select:focus {
+    border-color: #6666ff;
+    outline: 0;
+    box-shadow: none;
+}
+
+.form-control:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #6666ff;
+    outline: 0;
+    box-shadow: none;
+}
+
+input,
+textarea,
+select {
+    border-radius: 0px !important;
+    box-shadow: none;
+    font-size: 14px !important;
+}
+
+.image-container {
+    box-sizing: border-box;
+    position: relative;
+    width: 100px;
+    max-width: 100px;
+}
+
+.profile-picture {
+    object-fit: cover;
+    display: block;
+    border-radius: 50px;
+    height: 100px;
+    width: 100px;
+    background-color: #fff;
+}

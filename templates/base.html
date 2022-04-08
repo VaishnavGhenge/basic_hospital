@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Base{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap5/css/bootstrap.min.css' %}">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+    
+    <!-- CSS file -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block customcss %}
+    <!-- Custom CSS -->
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .main {
+            margin: auto;
+            width: 30%;
+        }
+    </style>
+    {% endblock customcss %}
+</head>
+
+<body>
+    {% block body %}
+    {% endblock body %}
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="{% static 'bootstrap5/js/bootstrap.min.js' %}"></script>
+
+    {% block customjs %}
+    {% endblock customjs %}
+</body>
+
+</html>

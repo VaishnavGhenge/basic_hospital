@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block customcss %}
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: flex;
+        align-items: center;
+        background-color: #f5f5f5;
+    }
+
+    main {
+        margin: auto;
+        margin-top: 100px;
+    }
+</style>
+{% endblock customcss %}
+
+{% block body %}
+<main>
+    <div class="jumbotron">
+        <h4 class="text-center mb-3">Login Form</h4>
+        {% for message in messages %}
+            {% if message.tags %}
+                {% if message.tags == "error" %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <span class="input-group-text">Username</span>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Password</span>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <div class="d-grid input-group">
+                <button type="submit" class="btn btn-purple">Login</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
