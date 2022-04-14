@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -20,3 +21,13 @@ class Patient(models.Model):
     lastname = models.CharField(max_length=200)
     profilepic = models.ImageField(upload_to='user/patient/profile/', default='user/default.png')
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
+
+class Post(models.Model):
+    id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, default='')
+    image = models.ImageField(upload_to='postimages/')
+    category = models.CharField(max_length=100)
+    status = models.CharField(default='draft', max_length=100)
+    summary = models.TextField()
+    content = models.TextField()

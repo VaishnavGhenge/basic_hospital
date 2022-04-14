@@ -22,67 +22,438 @@
     }
 
     .jumbotron {
-        width: 500px;
-        background-color: #212529 !important;
-        color: #f5f5f5;
+        width: 100%;
+        /* background-color: #212529 !important; */
+        /* color: #f5f5f5; */
+        padding: 2rem 2rem;
     }
 
     .title {
-        margin-left: 30px;
-        margin-top: 20px;
+        margin-top: 10px;
     }
 
     .title p {
-        margin-top: 0px;
         margin-bottom: 0px;
+    }
+
+    .image-container {
+        width: 80px;
+        max-width: 80px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile-picture {
+        height: 80px;
+        width: 80px;
+    }
+
+    .nav-pills .nav-link.active,
+    .nav-pills .show>.nav-link {
+        background-color: #6666ff;
+    }
+
+    .nav-link {
+        color: #6666ff;
+    }
+
+    .tab-pane {
+        margin-top: 40px;
+    }
+
+    .post-list {
+        width: 100%;
+    }
+
+    .blog-post {
+        background-color: #f5f5f5;
+        border-radius: 0.25rem;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+
+    .post-title {
+        cursor: pointer;
+    }
+
+    .blog-post .post-image img {
+        object-fit: cover;
+        border-radius: 0.25rem;
+        width: 250px;
+        height: 100%;
+    }
+
+    .post-details {
+        padding: 0px 20px;
+    }
+
+    .post-description {
+        margin-bottom: 5px;
+    }
+
+    .post-edit {
+        padding: 5px;
+    }
+
+    .post-edit a {
+        margin-right: 10px;
+        text-decoration: none;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .label {
+        margin-bottom: 0px;
+    }
+
+    .alert {
+        display: none;
     }
 </style>
 {% endblock customcss %}
 
 {% block body %}
 <main>
-    <div class="jumbotron">
-        <div class="d-flex flex-row">
-            <div class="image-container">
-                <img src="{{ child.profilepic.url }}" class="profile-picture" alt="profile">
-            </div>
-            <div class="title">
-                <p>{{ child.firstname }} {{ child.lastname }}</p>
-                <p class="text-muted">{{ usertype }}</p>
-            </div>
-            <button style="height: 40px; margin-left: 40px; margin-top: 20px;" onclick="location.href = '/logout';" class="btn btn-purple">Logout</button>
-        </div>
-        <div class="row mt-3">
-            <div class="col-6">
-                <p class="text-muted">Username</p>
-                <p>{{ request.user }}</p>
-            </div>
-            <div class="col-6">
-                <p class="text-muted">Email</p>
-                <p>{{ user.email }}</p>
-            </div>
-            <div class="col-6">
-                <p class="text-muted">Firstname</p>
-                <p>{{ child.firstname }}</p>
-            </div>
-            <div class="col-6">
-                <p class="text-muted">Lastname</p>
-                <p>{{ child.lastname }}</p>
-            </div>
-            <div class="col-6">
-                <p class="text-muted">Address</p>
-                <p>{{ child.address.line1 }}</p>
-            </div>
-            <div class="col-6">
-                <p class="text-muted">City</p>
-                <p>{{ child.address.city }}</p>
-            </div>
-            <div class="col-6">
-                <p class="text-muted">State</p>
-                <p>{{ child.address.state }}</p>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="jumbotron" style="min-width: 240px; max-width: 240px;">
+                <div>
+                    <div class="image-container">
+                        <img src="{{ child.profilepic.url }}" class="profile-picture" alt="profile">
+                    </div>
+                    <div class="title text-center">
+                        <p>{{ child.firstname }} {{ child.lastname }}</p>
+                        <p class="text-muted">{{ usertype }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- <a href="logout/" class="btn btn-purple">Logout</a> -->
+        <div class="col-md-9">
+            <div class="jumbotron" style="min-width: 776px; max-width: 776px;">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile"
+                            aria-selected="true">Profile</button>
+                    </li>
+                    {% if usertype == 'Doctor' %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-createblog-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-createblog" type="button" role="tab" aria-controls="pills-createblog"
+                            aria-selected="false">New Post</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-bloglist-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-bloglist" type="button" role="tab" aria-controls="pills-bloglist"
+                            aria-selected="false">Posts List</button>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-timeline-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-timeline" type="button" role="tab" aria-controls="pills-timeline"
+                            aria-selected="false">Timeline</button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-profile" role="tabpanel"
+                        aria-labelledby="pills-profile-tab">
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <p class="text-muted label">Username</p>
+                                <p>{{ request.user }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted label">Email</p>
+                                <p>{{ user.email }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted label">Firstname</p>
+                                <p>{{ child.firstname }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted label">Lastname</p>
+                                <p>{{ child.lastname }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted label">Address</p>
+                                <p>{{ child.address.line1 }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted label">City</p>
+                                <p>{{ child.address.city }}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-muted label">State</p>
+                                <p>{{ child.address.state }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if usertype == 'Doctor' %}
+                    <div class="tab-pane fade" id="pills-createblog" role="tabpanel"
+                        aria-labelledby="pills-createblog-tab">
+
+                        <div id="save-success" class="alert alert-success alert-dismissible fade show" role="alert">
+                            New post created!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div id="save-error" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <p id="save-error-message"></p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <h5>Create New Post</h5>
+                        <form method="post" class="new-post" action="/save-post/">
+                            {% csrf_token %}
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="title">Post title</label>
+                                    <input type="text" name="title" id="title" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="image">Select image</label>
+                                    <input type="file" name="image" id="image" class="form-control" accept="image/*"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="category">Select category</label>
+                                    <select class="form-select" name="category" id="category"
+                                        aria-label="Select post category" required>
+                                        <option selected value="#mentalhealth">#mentalhealth</option>
+                                        <option value="#heartdisease">#heartdisease</option>
+                                        <option value="#covid19">#covid19</option>
+                                        <option value="#immunization">#immunization</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="summary">Enter summary</label>
+                                <textarea name="summary" id="sumary" cols="30" rows="3"
+                                    class="form-control"></textarea>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="content">Enter Content</label>
+                                    <textarea name="content" id="content" cols="30" rows="10" class="form-control"
+                                        required></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-grid col-md-6">
+                                    <button type="submit" class="btn btn-purple" name="save">Post live</button>
+                                </div>
+                                <div class="d-grid col-md-6">
+                                    <button type="submit" class="btn btn-purple" name="draft">Save to
+                                        draft</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-bloglist" role="tabpanel" aria-labelledby="pills-bloglist-tab">
+                        {% for post in myposts %}
+                        <div class="post-list">
+                            <div class="blog-post" title="Visit this post">
+                                <div class="d-flex flex-row">
+                                    <div class="post-image">
+                                        <img src="{{ post.image.url }}" alt="post image">
+                                    </div>
+                                    <div class="post-details">
+                                        <h5 class="post-title" link="{% url 'postview' post.id %}">{{ post.title }}</h5>
+                                        <p class="post-description">{{ post.summary|truncatewords:15 }}</p>
+                                        <div class="post-tags">
+                                            <span class="badge rounded-pill bg-secondary">{{ post.category }}</span>
+                                        </div>
+                                        <div class="post-edit">
+                                            <a href="#edit" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal{{ post.id }}"><i
+                                                    class="fa-light fa-pen-to-square"></i></a>
+                                            <a href="#delete" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i
+                                                    class="fa-light fa-trash" link="{% url 'postdelete' post.id %}"></i></a>
+                                            {% if post.status == 'live' %}
+                                            <a href="#status" class="text-success">Live</a>
+                                            {% else %}
+                                            <a href="#status" class="text-warning">Draft</a>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- edit post -->
+                                        <div class="modal fade" id="exampleModal{{ post.id }}" data-bs-backdrop="static"
+                                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+
+                                                    <div id="edit-success{{ post.id }}" style="margin: 8px;" class="alert alert-success alert-dismissible fade show" role="alert">
+                                                        Changes applied
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                            
+                                                    <div id="edit-error{{ post.id }}" style="margin: 8px;" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <p id="edit-error-message{{ post.id }}"></p>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Edit post</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="post" class="form-edit" action="/update-post/edit/" id="{{ post.id }}">
+                                                            {% csrf_token %}
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-6">
+                                                                    <label for="title">Post title</label>
+                                                                    <input type="text" name="title" id="title"
+                                                                        class="form-control" value="{{ post.title }}"
+                                                                        required>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label for="image">Select image</label>
+                                                                    <input type="file" name="image" id="image"
+                                                                        class="form-control" accept="image/*">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-6">
+                                                                    <label for="category">Select category</label>
+                                                                    <select class="form-select" name="category"
+                                                                        id="category" aria-label="Select post category"
+                                                                        required>
+                                                                        <option {% if post.category == '#mentalhealth' %}
+                                                                            selected {% endif %} value="#mentalhealth">
+                                                                            #mentalhealth</option>
+                                                                        <option {% if post.category == '#heartdisease' %}
+                                                                            selected {% endif %} value="#heartdisease">
+                                                                            #heartdisease
+                                                                        </option>
+                                                                        <option {% if post.category == '#covid19' %}
+                                                                            selected {% endif %} value="#covid19">
+                                                                            #covid19
+                                                                        </option>
+                                                                        <option {% if post.category == '#immunization' %}
+                                                                            selected {% endif %} value="#immunization">
+                                                                            #immunization
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 mb-3">
+                                                                <label for="summary">Enter summary</label>
+                                                                <textarea name="summary" id="sumary" cols="30"
+                                                                    rows="3" class="form-control"
+                                                                    required>{{ post.summary|safe }}</textarea>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-12">
+                                                                    <label for="content">Enter Content</label>
+                                                                    <textarea name="content" id="content" cols="30"
+                                                                        rows="10" class="form-control"
+                                                                        required>{{ post.content|safe }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="d-grid col-md-6">
+                                                                    <button type="submit" class="btn btn-purple"
+                                                                        name="save-edit">Save changes</button>
+                                                                </div>
+                                                                <div class="d-grid col-md-6">
+                                                                    <button type="submit" class="btn btn-purple"
+                                                                        name="save-edit-draft">Save to
+                                                                        draft</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="tab-pane fade" id="pills-timeline" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                        <div class="row">
+                            <div class="col-md-6 mt-1">
+                                <a href="" style="text-decoration: none;">Refresh <i class="fa-light fa-arrows-rotate"></i></a>
+                            </div>
+                            <div class="col-md-6">
+                                <i class="fa-regular fa-magnifying-glass text-muted" style="position: absolute; margin-left: 8px; margin-top: 6px;"></i>
+                                <input type="text" style="padding-left: 30px;" class="form-control" id="search" placeholder="Filter category">
+                            </div>
+                        </div>
+                        <hr>
+                        {% for post in posts %}
+                        <div class="post-list">
+                            <div class="blog-post" title="Visit this post">
+                                <div class="d-flex flex-row">
+                                    <div class="post-image">
+                                        <img src="{{ post.image.url }}" alt="post image">
+                                    </div>
+                                    <div class="post-details">
+                                        <h5 class="post-title" link="{% url 'postview' post.id %}">{{ post.title }}</h5>
+                                        <p class="post-description">{{ post.summary|truncatewords:15 }}</p>
+                                        <div class="post-tags">
+                                            <span class="badge rounded-pill bg-secondary">{{ post.category }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 {% endblock %}
+
+{% block customjs %}
+<script src="{% static 'js/save_post.js' %}"></script>
+<script>
+    $(".post-title").click(function () {
+        location.href = $(this).attr('link');
+    });
+</script>
+
+<script>
+    !(function ($) {
+        "use strict";
+        $('.fa-trash').click(function() {
+            var action = $(this).attr('link');
+            $.ajax({
+            type: "GET",
+            url: action,
+            }).done(function (message) {
+                if (message.status == 'success') {
+                    location.reload();
+                }
+            });
+        });
+
+        $(document).ready(function(){
+            $("#search").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $(".blog-post").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    })(jQuery);
+</script>
+{% endblock customjs %}

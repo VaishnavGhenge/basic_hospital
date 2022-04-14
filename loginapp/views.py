@@ -1,13 +1,16 @@
-from genericpath import exists
+from os import stat
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from .models import Doctor, Patient, Address
+from .models import Doctor, Patient, Address, Post
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+
 def index(request):
     return render(request, 'index.html')
+
 
 def signup(request):
     if request.method == 'POST':
@@ -67,32 +70,39 @@ def signup(request):
         if 'profile-picture' in request.FILES:
             try:
                 user = User.objects.create_user(username, email, pass1)
-                address = Address(line1=addrs, city=city, state=state, pincode=pin)
+                address = Address(line1=addrs, city=city,
+                                  state=state, pincode=pin)
                 address.save()
                 profile = request.FILES['profile-picture']
 
                 if usertype == 'doctor':
-                    Doctor(_id=user, firstname=firstname, lastname=lastname, profilepic=profile, address=address).save()
+                    Doctor(_id=user, firstname=firstname, lastname=lastname,
+                           profilepic=profile, address=address).save()
                 elif usertype == 'patient':
-                    Patient(_id=user, firstname=firstname, lastname=lastname, profilepic=profile, address=address).save()
+                    Patient(_id=user, firstname=firstname, lastname=lastname,
+                            profilepic=profile, address=address).save()
                 messages.success(request, "Account created successfully")
             except Exception as e:
                 messages.error(request, e)
         else:
             try:
                 user = User.objects.create_user(username, email, pass1)
-                address = Address(line1=addrs, city=city, state=state, pincode=pin)
+                address = Address(line1=addrs, city=city,
+                                  state=state, pincode=pin)
                 address.save()
                 if usertype == 'doctor':
-                    Doctor(_id=user, firstname=firstname, lastname=lastname, address=address).save()
+                    Doctor(_id=user, firstname=firstname,
+                           lastname=lastname, address=address).save()
                 elif usertype == 'patient':
-                    Patient(_id=user, firstname=firstname, lastname=lastname, address=address).save()
+                    Patient(_id=user, firstname=firstname,
+                            lastname=lastname, address=address).save()
                 messages.success(request, "Account created successfully")
             except Exception as e:
                 messages.error(request, e)
         return render(request, 'signup.html')
     else:
         return render(request, 'signup.html')
+
 
 def login_(request):
     if request.method == 'POST':
@@ -110,24 +120,136 @@ def login_(request):
     else:
         return render(request, 'login.html')
 
+
 @login_required(login_url='login')
 def dashboard(request):
     user = request.user
     data = {}
     if Doctor.objects.filter(_id=user).exists():
+        doctor = Doctor.objects.get(_id=user)
         data = {
             'user': user,
-            'child': Doctor.objects.get(_id=user),
+            'child': doctor,
             'usertype': 'Doctor',
+            'myposts': Post.objects.filter(owner=doctor).order_by('-id'),
+            'posts': Post.objects.filter(status='live').order_by('-id'),
         }
     elif Patient.objects.filter(_id=user).exists():
         data = {
             'user': user,
             'child': Patient.objects.get(_id=user),
             'usertype': 'Patient',
+            'posts': Post.objects.filter(status='live').order_by('-id'),
         }
     return render(request, 'dashboard.html', data)
 
+@login_required(login_url='login')
+def save_post(request, id=0, val='draft'):
+    print('inside')
+    if id == 0:
+        if request.method == 'POST':
+            print('inside post')
+            title = request.POST.get('title')
+            image = request.FILES.get('image')
+            category = request.POST.get('category')
+            summary = request.POST.get('summary')
+            content = request.POST.get('content')
+            user = request.user
+            doctor = Doctor.objects.get(_id=user)
+            status = 'draft'
+
+            if val == 'save':
+                status = 'live'
+
+            try:
+                Post(owner=doctor, title=title, image=image,
+                     category=category, summary=summary, content=content, status=status).save()
+                message = {
+                    'status': 'success',
+                }
+                return JsonResponse(message)
+            except Exception as e:
+                message = {
+                    'status': 'error',
+                    'msg': e,
+                }
+                return JsonResponse(message)
+        else:
+            return JsonResponse({ 'msg': 'error' })
+    else:
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            category = request.POST.get('category')
+            summary = request.POST.get('summary')
+            content = request.POST.get('content')
+            status = 'draft'
+
+            if val == 'save-edit':
+                status = 'live'
+
+            print(status)
+            try:
+                if 'image' in request.FILES:
+                    image = request.FILES['image']
+                    Post.objects.filter(id=id).update(
+                    title=title, image=image, category=category, summary=summary, content=content, status=status)
+                    message = {
+                        'status': 'success',
+                    }
+                    return JsonResponse(message)
+                else:
+                    Post.objects.filter(id=id).update(
+                    title=title, category=category, summary=summary, content=content, status=status)
+                    message = {
+                        'status': 'success',
+                    }
+                    return JsonResponse(message)
+            except Exception as e:
+                message = {
+                    'status': 'error',
+                    'msg': e,
+                }
+                return JsonResponse(message)
+        else:
+            return JsonResponse({ 'status': 'error', 'msg': 'Something went wrong' })
+
+@login_required(login_url='login')
+def delete_post(request, id):
+    try:
+        Post.objects.filter(id=id).delete()
+        message = {
+            'status': 'success',
+        }
+        return JsonResponse(message)
+    except Exception as e:
+        message = {
+            'status': 'error',
+            'msg': e,
+        }
+        return JsonResponse(message)
+
+@login_required(login_url='login')
+def postview(request, id):
+    user = request.user
+    post = Post.objects.get(id=id)
+    data = {}
+    if Doctor.objects.filter(_id=user).exists():
+        data = {
+            'user': user,
+            'child': Doctor.objects.get(_id=user),
+            'post': post,
+            'usertype': 'Doctor',
+        }
+    elif Patient.objects.filter(_id=user).exists():
+        data = {
+            'user': user,
+            'post': post,
+            'child': Patient.objects.get(_id=user),
+            'usertype': 'Patient',
+        }
+    return render(request, 'postview.html', data)
+
+@login_required(login_url='login')
 def logout_(request):
     logout(request)
     return redirect('login')
