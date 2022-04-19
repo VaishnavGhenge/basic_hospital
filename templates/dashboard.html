@@ -111,6 +111,40 @@
     .alert {
         display: none;
     }
+
+    .doctor-img img {
+        object-fit: cover;
+        display: block;
+        border-radius: 50px;
+        height: 70px;
+        width: 70px;
+        background-color: #fff;
+    }
+
+    .doctor-name {
+        padding: 10px;
+    }
+
+    .appointment {
+        background-color: #f5f5f5;
+        border-radius: 0.25rem;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+
+    .appointment-dt {
+        background-color: #f5f5f5;
+        border-radius: 0.25rem;
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+
+    .actv-app {
+        background-color: #e9ecef;
+        border-radius: 0.25rem;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
 </style>
 {% endblock customcss %}
 
@@ -154,6 +188,11 @@
                         <button class="nav-link" id="pills-timeline-tab" data-bs-toggle="pill"
                             data-bs-target="#pills-timeline" type="button" role="tab" aria-controls="pills-timeline"
                             aria-selected="false">Timeline</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-appointments-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-appointments" type="button" role="tab"
+                            aria-controls="pills-appointments" aria-selected="false">Appointments</button>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
@@ -237,8 +276,7 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="summary">Enter summary</label>
-                                <textarea name="summary" id="sumary" cols="30" rows="3"
-                                    class="form-control"></textarea>
+                                <textarea name="summary" id="sumary" cols="30" rows="3" class="form-control"></textarea>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-12">
@@ -260,6 +298,7 @@
                     </div>
 
                     <div class="tab-pane fade" id="pills-bloglist" role="tabpanel" aria-labelledby="pills-bloglist-tab">
+                        <hr>
                         {% for post in myposts %}
                         <div class="post-list">
                             <div class="blog-post" title="Visit this post">
@@ -278,7 +317,8 @@
                                                 data-bs-target="#exampleModal{{ post.id }}"><i
                                                     class="fa-light fa-pen-to-square"></i></a>
                                             <a href="#delete" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i
-                                                    class="fa-light fa-trash" link="{% url 'postdelete' post.id %}"></i></a>
+                                                    class="fa-light fa-trash"
+                                                    link="{% url 'postdelete' post.id %}"></i></a>
                                             {% if post.status == 'live' %}
                                             <a href="#status" class="text-success">Live</a>
                                             {% else %}
@@ -293,14 +333,20 @@
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
 
-                                                    <div id="edit-success{{ post.id }}" style="margin: 8px;" class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    <div id="edit-success{{ post.id }}" style="margin: 8px;"
+                                                        class="alert alert-success alert-dismissible fade show"
+                                                        role="alert">
                                                         Changes applied
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                            aria-label="Close"></button>
                                                     </div>
-                            
-                                                    <div id="edit-error{{ post.id }}" style="margin: 8px;" class="alert alert-danger alert-dismissible fade show" role="alert">
+
+                                                    <div id="edit-error{{ post.id }}" style="margin: 8px;"
+                                                        class="alert alert-danger alert-dismissible fade show"
+                                                        role="alert">
                                                         <p id="edit-error-message{{ post.id }}"></p>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                            aria-label="Close"></button>
                                                     </div>
 
                                                     <div class="modal-header">
@@ -309,7 +355,8 @@
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="post" class="form-edit" action="/update-post/edit/" id="{{ post.id }}">
+                                                        <form method="post" class="form-edit"
+                                                            action="/update-post/edit/" id="{{ post.id }}">
                                                             {% csrf_token %}
                                                             <div class="row mb-3">
                                                                 <div class="col-md-6">
@@ -350,8 +397,8 @@
                                                             </div>
                                                             <div class="col-md-12 mb-3">
                                                                 <label for="summary">Enter summary</label>
-                                                                <textarea name="summary" id="sumary" cols="30"
-                                                                    rows="3" class="form-control"
+                                                                <textarea name="summary" id="sumary" cols="30" rows="3"
+                                                                    class="form-control"
                                                                     required>{{ post.summary|safe }}</textarea>
                                                             </div>
                                                             <div class="row mb-3">
@@ -382,6 +429,8 @@
                                 </div>
                             </div>
                         </div>
+                        {% empty %}
+                        <p class="text-info">empty</p>
                         {% endfor %}
                     </div>
                     {% endif %}
@@ -389,11 +438,14 @@
                     <div class="tab-pane fade" id="pills-timeline" role="tabpanel" aria-labelledby="pills-timeline-tab">
                         <div class="row">
                             <div class="col-md-6 mt-1">
-                                <a href="" style="text-decoration: none;">Refresh <i class="fa-light fa-arrows-rotate"></i></a>
+                                <a href="" style="text-decoration: none;">Refresh <i
+                                        class="fa-light fa-arrows-rotate"></i></a>
                             </div>
                             <div class="col-md-6">
-                                <i class="fa-regular fa-magnifying-glass text-muted" style="position: absolute; margin-left: 8px; margin-top: 6px;"></i>
-                                <input type="text" style="padding-left: 30px;" class="form-control" id="search" placeholder="Filter category">
+                                <i class="fa-regular fa-magnifying-glass text-muted"
+                                    style="position: absolute; margin-left: 8px; margin-top: 6px;"></i>
+                                <input type="text" style="padding-left: 30px;" class="form-control" id="search"
+                                    placeholder="Filter category">
                             </div>
                         </div>
                         <hr>
@@ -414,7 +466,156 @@
                                 </div>
                             </div>
                         </div>
+                        {% empty %}
+                        <p class="text-info">empty</p>
                         {% endfor %}
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-appointments" role="tabpanel"
+                        aria-labelledby="pills-appointments-tab">
+                        {% if usertype == 'Patient' %}
+                        <a href="#" class="btn btn-purple position-relative" data-bs-toggle="modal" data-bs-target="#appointment-lst-modal">
+                            Active Appointments
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ appcount }}
+                                <span class="visually-hidden">active appointments</span>
+                              </span>
+                        </a>
+                        <!-- Scrollable modal -->
+                        <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="appointment-lst-modal" tabindex="-1"
+                            aria-labelledby="apointment-lst-modal-label" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">Active Appointments</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                    <div class="modal-body">
+                                        <div class="active-appointments">
+                                            {% for app in appointments %}
+                                            <div class="actv-app">
+                                                <p class="text-success">Appointment</p>
+                                                <div class="row">
+                                                    <div class="col-6">Doctor: {{ app.doctor.firstname }} {{ app.doctor.lastname }}</div>
+                                                    <div class="col-6">Date: {{ app.date|date:"M d, Y" }}</div>
+                                                    <div class="col-6">Time: {{ app.time|date:'P' }}</div>
+                                                    <div class="col-6">Duration: 45 min</div>
+                                                </div>
+                                            </div>
+                                            {% empty %}
+                                            <p class="text-info">empty</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="apointments">
+                            {% for doc in doctors %}
+                            <div class="appointment">
+                                <div class="row justify-content-between">
+                                    <div class="col d-flex flex-row">
+                                        <div class="doctor-img">
+                                            <img src="{{ doc.profilepic.url }}" alt="doctor image">
+                                        </div>
+                                        <div class="doctor-name">
+                                            Dr. {{ doc.firstname }} {{ doc.lastname }}
+                                            <p class="text-muted">Doctor</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 align-self-center">
+                                        <a href="#" class="btn btn-purple" data-bs-toggle="modal"
+                                            data-bs-target="#appointment-modal"
+                                            docname="{{ doc.firstname }} {{ doc.lastname }}" docid="{{ doc.id }}">Book
+                                            Appointment</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal fade " data-bs-backdrop="static" data-bs-keyboard="false" id="appointment-modal" tabindex="-1"
+                            aria-labelledby="apointment-modal-label" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">New appointment</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+
+                                    <div id="appointment-success" style="margin: 8px;"
+                                    class="alert alert-success alert-dismissible fade show"
+                                    role="alert">
+                                        <p>Appointment Confirmed!</p>
+                                        <div class="row">
+                                            <div class="col">Doctor Name: <p id="confirm-name"></p></div>
+                                            <div class="col">Appointment Date: <p id="confirm-date"></p></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">Appointment Start Time: <p id="confirm-sttime"></p></div>
+                                            <div class="col">Appointment End Time: <p id="confirm-entime"></p></div>
+                                        </div>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                    </div>
+
+                                    <div id="appointment-error" style="margin: 8px;"
+                                        class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <p id="appointment-error-msg"></p>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
+
+                                    <form method="post" class="appointment-form" action="{% url 'book-appointment' %}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        <input type="hidden" value="" name="doctor-id" id="doctor-id" required>
+                                        <div class="mb-3">
+                                            <label for="required-speciality" class="col-form-label">Enter Required
+                                                Speciality</label>
+                                            <input type="text" class="form-control" name="required-speciality"
+                                                id="required-speciality" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="app-date" class="col-form-label">Select Appointment Date</label>
+                                            <input type="date" class="form-control" name="app-date" id="app-date"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="app-time" class="col-form-label">Select Appointment Time</label>
+                                            <input type="time" class="form-control" name="app-time" id="app-time"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-purple" id="confirm-btn">Confirm Appointment</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if usertype == 'Doctor' %}
+                        <p class="text-info">Total appointments - {{ appcount }}</p><hr>
+                        <div class="appointments">
+                            {% for app in appointments %}
+                            <div class="appointment-dt">
+                                <p class="text-success">Appointment Details</p>
+                                <div class="row">
+                                    <div class="col-6">Patient Name: {{ app.patient.firstname }} {{ app.patient.lastname }}</div>
+                                    <div class="col-6">Date: {{ app.date|date:"M d, Y" }}</div>
+                                    <div class="col-6">Time: {{ app.time|date:'P' }}</div>
+                                    <div class="col-6">Duration: 45 min</div>
+                                    <div class="col-6">Speciality Required: {{ app.speciality }}</div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p class="text-info">empty</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -429,16 +630,29 @@
     $(".post-title").click(function () {
         location.href = $(this).attr('link');
     });
+
+    var appModal = document.getElementById('appointment-modal');
+    appModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var recipient = button.getAttribute('docname');
+
+        var modalTitle = appModal.querySelector('.modal-title');
+        var modalBodyInput = appModal.querySelector('#doctor-id');
+        var doc_id = button.getAttribute('docid');
+
+        modalTitle.textContent = 'New appointment with Dr. ' + recipient;
+        modalBodyInput.value = doc_id;
+    });
 </script>
 
 <script>
     !(function ($) {
         "use strict";
-        $('.fa-trash').click(function() {
+        $('.fa-trash').click(function () {
             var action = $(this).attr('link');
             $.ajax({
-            type: "GET",
-            url: action,
+                type: "GET",
+                url: action,
             }).done(function (message) {
                 if (message.status == 'success') {
                     location.reload();
@@ -446,14 +660,30 @@
             });
         });
 
-        $(document).ready(function(){
-            $("#search").on("keyup", function() {
+        $(document).ready(function () {
+            $("#search").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
-                $(".blog-post").filter(function() {
+                $(".blog-post").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
         });
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        } 
+    
+        today = yyyy + '-' + mm + '-' + dd;
+        document.getElementById("app-date").setAttribute("min", today);
     })(jQuery);
 </script>
 {% endblock customjs %}

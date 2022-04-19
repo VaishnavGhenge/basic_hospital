@@ -1,4 +1,3 @@
-from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -9,14 +8,14 @@ class Address(models.Model):
     pincode = models.PositiveIntegerField()
 
 class Doctor(models.Model):
-    _id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     firstname = models.CharField(max_length=200)
     lastname = models.CharField(max_length=200)
     profilepic = models.ImageField(upload_to='user/doctor/profile/', default='user/default.png')
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
 
 class Patient(models.Model):
-    _id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     firstname = models.CharField(max_length=200)
     lastname = models.CharField(max_length=200)
     profilepic = models.ImageField(upload_to='user/patient/profile/', default='user/default.png')
@@ -31,3 +30,12 @@ class Post(models.Model):
     status = models.CharField(default='draft', max_length=100)
     summary = models.TextField()
     content = models.TextField()
+
+class Appointment(models.Model):
+    id = models.AutoField(primary_key=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    time= models.TimeField()
+    date = models.DateField()
+    speciality = models.CharField(max_length=200)
+    status = models.CharField(max_length=100)

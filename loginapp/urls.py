@@ -11,5 +11,6 @@ urlpatterns = [
     path('post-delete/<int:id>/', views.delete_post, name='postdelete'),
     path('save-post/<str:val>/', views.save_post, name='postsave'),
     path('post/<int:id>/', views.postview, name='postview'),
+    path('book-appointment/', views.bookAppointment, name='book-appointment'),
     path('logout/', views.logout_, name='logout'),
 ]
